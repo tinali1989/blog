@@ -1,0 +1,103 @@
+<table width='80%'>
+    <tr style='background-color:#EEEEEE;'>
+        <td>
+            <font size="4">
+                Blog
+            </font>
+        </td>
+    </tr>
+</table>
+<br>
+<table width='80%'>
+    <tr>
+        <td valign='bottom'>
+            <h3><%=h @post.title %></h3>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <%= formatOutPut @post.context %>
+        </td>
+    </tr>
+</table>
+<br>
+<table width='80%'>
+    <tr style='background-color:#EEEEEE;'>
+        <td>
+            <font size="4">
+                Comments
+            </font>
+        </td>
+    </tr>
+</table>
+<% if @post.comments.size>0 then %>
+<% for comment in @comments %>
+<div style='width:80%;background-color:<%= cycle("","#EEEEEE")%>'>
+    <table width='100%'>
+        <tr>
+            <td width="10%" align="left">
+                <br>
+                <b><%=h comment.commenter %></b>
+                <br>
+                <%=h (comment.created_at).strftime("%Y/%m/%d") %>
+            </td>
+            <td width="2%">
+                :
+            </td>
+            <td align="left" width="60%">
+                <%=h comment.body %>
+            </td>
+        </tr>
+    </table>
+</div>
+<% end %>
+<% else %>
+No Comments!<%end %>
+<br>
+<table width='80%'>
+    <tr>
+        <td align='right'>
+            <%= will_paginate @comments %>
+        </td>
+    </tr>
+    <tr style='background-color:#EEEEEE;'>
+        <td>
+            <font size="4">
+                Add a comment
+            </font>
+        </td>
+    </tr>
+</table>
+<% form_for([@post,@post.comments.build], :url => {:controller=>"comments", :action => "create" }) do |f| %>
+<div style="display:none;">
+    <%= f.label :postId %>
+    <br/>
+    <%= f.text_field :post_id,:title=>@post.id %>
+</div>
+<%name = session[:username] %>
+<table>
+    <tr style="display:none">
+        <td align='right'>
+            <%= f.label :commenter %>
+        </td>
+        <td>
+            <%= f.text_field :commenter,:value=>"#{name}" %>
+        </td>
+    </tr>
+    <tr>
+        <td align='left'>
+            <%= f.label :Context %>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <%= f.text_area :body ,:size=>"45x10" %>
+        </td>
+    </tr>
+    <tr>
+        <td colspan='2' align='right'>
+            <%= f.submit 'comment' %>
+        </td>
+    </tr>
+</table>
+<% end %>

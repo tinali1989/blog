@@ -1,0 +1,38 @@
+<%=javascript_include_tag "prototype","effects" %>
+<h2>Blog Management</h2>
+<hr>
+<table border="0,1,1,0" style="border: solid #000 1px;">
+    <% for post in @posts %>
+    <tr>
+        <table width='80%' style='background-color:<%= cycle("#EEEEEE","")%>'>
+            <tr>
+                <td align='left'>
+                    <h3><%=h post.title %></h3>
+                </td>
+                <td align='right'>
+                    <%=h post.name %>/ <%=h (post.updated_at).strftime("%Y-%m-%d") %>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2,rowspan=3,align='left'>
+                    <%= truncate_with_more post.context,"post_#{post.id}" %>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 align='right'>
+                    <% if session[:role] != '1' and post.name != session[:username] %>
+                    <%= link_to 'Show', post %>
+                    <% else %>
+                    <%= link_to 'Show', post %>|<%= link_to 'Edit', edit_post_path(post) %>|<%= link_to 'Delete', post, :confirm => 'Are you sure?', :method => :delete %>
+                    <% end %>
+                </td>
+            </tr>
+        </table>
+    </tr>
+    <% end %>
+    <tr>
+        <td>
+            <%= will_paginate @posts %>
+        </td>
+    </tr>
+</table>
